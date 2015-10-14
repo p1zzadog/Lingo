@@ -7,8 +7,15 @@ angular.module('lingoApp')
 			$http.post('/api/translation', $scope.translate)
 				.then(function(returnData){
 					console.log(returnData)
+				if (returnData.data.translatedText){
 					$scope.translatedWord = returnData.data.translatedText
-				})
+				}
+				else {
+					$scope.translatedWord = "Sorry there was an issue"
+				}
+
+				} )
+				
 		}
 
 
