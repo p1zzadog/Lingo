@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="lingoApp">
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.min.js"></script>
+</head>
+<body ng-controller="lingoController">
+	<h1>{{greeting}}</h1>
+	<form ng-submit="translateWord()">
+		<input ng-model="translate.word" placeholder="Word to Translate">
+		<input ng-model="translate.from" placeholder="Language From">
+		<input ng-model="translate.to" placeholder="Language To">
+		<input type="submit">
+	</form>
+	<div>
+	{{translatedWord}}
+	</div>
+
+
+
+<script src="../javascripts/main.js"></script>
+</body>
+</html>
