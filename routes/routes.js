@@ -7,6 +7,9 @@ router.get('/', function(req, res){
 })
 
 router.post('/api/translation', controller.getTranslation)
-
+router.get('/quiz', function(req, res){
+	res.sendFile('/html/quiz.html', {root: './public'})
+})
+router.post('/languageSelect', controller.getWordList)
 
 module.exports = router

@@ -22,3 +22,18 @@ angular.module('lingoApp')
 
 
 	}])
+angular.module('lingoApp')
+	.controller('quizController', ['$scope', '$http', function($scope, $http){
+		$scope.languageSelectForm = true
+		$scope.languageSelect = function(){
+		$http.post('/languageSelect', { languageSelection : $scope.languageSelection } )
+			.then(function(returnData){
+				console.log(returnData)
+				$scope.words = returnData.data
+				console.log(returnData.data)
+			})
+		}
+
+
+		// $scope.words= wordBank
+	}])

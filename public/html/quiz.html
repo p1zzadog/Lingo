@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="lingoApp">
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.min.js"></script>
+</head>
+<body ng-controller="quizController">
+
+<form ng-submit="languageSelect()" ng-show="languageSelectForm">
+	<label>What language would you like to study?</label>
+	<input ng-model="languageSelection" placeholder="Language">
+	<input type="submit">
+</form>
+
+<ul>
+	<li ng-repeat="word in words">
+		<h1>{{word.translatedText}}</h1>
+	</li>
+</ul>
+
+<script src="../javascripts/main.js"></script>
+
+</body>
+</html>
