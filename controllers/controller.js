@@ -2,14 +2,29 @@ var googleTranslate = require('google-translate')('AIzaSyCXW-bazvWNiDrpfLvCGNUAS
 var model = require('../models/model.js');
 var questionIndex = 0;
 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // utility functions
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 var compareArrays = function(array1, array2) {
+	var spliceCount = 0;
 	for (var i=0; i<array2.length; i++){
 		if (array1[i] !== array2[i]) {
-			return false
+			if (spliceCount < 2) {
+				array1 = array1.splice(i, 0, array2[i]);
+				spliceCount++;
+			}
+			else {
+				return false;
+			};
 		};
 	};
+	return true;
 };
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// request handler functions
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 var getTranslation = function(req, res){
 	googleTranslate.translate(req.body.word, req.body.from, req.body.to, function(err, translation){
@@ -38,8 +53,8 @@ var getNextQuestion = function(req, res){
 	}
 	else {
 		res.send('All done!')
-	}
-}
+	};
+};
 
 var checkResponse = function(req, res){
 	var userResponse = req.body.response.toLowerCase().split('');
@@ -56,7 +71,7 @@ var checkResponse = function(req, res){
 	
 	console.log('userResponse: ', userResponse);
 	console.log('answer: ', answer);
-}
+};
 
 module.exports = {
 	getTranslation  : getTranslation,

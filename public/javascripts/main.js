@@ -71,6 +71,7 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', func
 			}
 			console.log(returnData);
 		})
+		$scope.quizResponse = '';
 	}
 
 
