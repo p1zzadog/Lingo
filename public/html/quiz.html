@@ -6,19 +6,23 @@
 </head>
 <body ng-controller="quizController">
 
-<form ng-submit="languageSelect()" ng-show="languageSelectForm">
-	<label>What language would you like to study?</label>
-	<input ng-model="languageSelection" placeholder="Language">
-	<input type="submit">
-</form>
+	<form ng-submit="languageSelect()" ng-show="languageSelectForm">
+		<label>What language would you like to study?</label>
+		<input ng-model="languageSelection" placeholder="Language">
+		<input type="submit">
+	</form>
 
-<ul>
-	<li ng-repeat="word in words">
-		<h1>{{word.translatedText}}</h1>
-	</li>
-</ul>
+	<button ng-click="beginQuiz()" ng-show="beginQuizShow">Begin Quiz</button>
+
+	<div ng-show="quizShow">
+		<form ng-submit="submitResponse()">
+			<h2>Please enter the English translation of:</h2>
+			<h3 ng-bind="question"></h3>
+			<input ng-model="quizResponse"/>
+			<input type="submit"/>
+		</form>
+	</div>
 
 <script src="../javascripts/main.js"></script>
-
 </body>
 </html>
