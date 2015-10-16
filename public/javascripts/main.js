@@ -19,6 +19,27 @@ angular.module('lingoApp').controller('lingoController', ['$scope', '$http', fun
 }]);
 
 angular.module('lingoApp').controller('quizController', ['$scope', '$http', function($scope, $http){
+
+	// utility functions
+	var checkReturnData = function(returnData){
+		if (returnData.data === 'incorrect') {
+			return false;
+		}
+		else{
+			return true;
+		};
+	};
+
+	var getNextQuestion = function(){
+		$http({
+			method: 'get',
+			url: '/quiz/get-next-question'
+		}).then(function(nextQuestion){
+			$scope.question = nextQuestion.data;
+		});
+	}
+
+	// View related functions
 	
 	$scope.languageSelectForm = true
 	$scope.languageSelect = function(){
@@ -31,12 +52,7 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', func
 	$scope.beginQuiz = function(){
 		$scope.beginQuizShow = !$scope.beginQuizShow;
 		$scope.quizShow = true;
-		$http({
-			method: 'get',
-			url: '/quiz/get-next-question'
-		}).then(function(returnData){
-			$scope.question = returnData.data;
-		});
+		getNextQuestion();
 	};
 
 	$scope.submitResponse = function(){
@@ -46,6 +62,13 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', func
 			url: '/quiz/check-response',
 			data: {response : $scope.quizResponse},
 		}).then(function(returnData){
+			if (checkReturnData(returnData)===true){
+				getNextQuestion();
+				$scope.wrongAnwerMessage = false;
+			}
+			else {
+				$scope.wrongAnswerMessage = true;
+			}
 			console.log(returnData);
 		})
 	}

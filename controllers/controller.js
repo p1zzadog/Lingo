@@ -32,13 +32,18 @@ var languageSelect = function(req, res){
 };
 
 var getNextQuestion = function(req, res){
+	if (questionIndex < model.wordBank.length){
 	res.send(model.questionBank[questionIndex].translatedText);
 	questionIndex++;
+	}
+	else {
+		res.send('All done!')
+	}
 }
 
 var checkResponse = function(req, res){
-	var userResponse = req.body.response.split('');
-	var answer = model.wordBank[questionIndex-1].split('');
+	var userResponse = req.body.response.toLowerCase().split('');
+	var answer = model.wordBank[questionIndex-1].toLowerCase().split('');
 	if (Math.abs(userResponse.length - answer.length)>1){
 		res.send('incorrect');
 	}
@@ -47,7 +52,7 @@ var checkResponse = function(req, res){
 	}
 	else {
 		res.send('correct');
-	}
+	};
 	
 	console.log('userResponse: ', userResponse);
 	console.log('answer: ', answer);
