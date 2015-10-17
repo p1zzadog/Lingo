@@ -6,21 +6,7 @@ var questionIndex = 0;
 // utility functions
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-var compareArrays = function(array1, array2) {
-	var spliceCount = 0;
-	for (var i=0; i<array2.length; i++){
-		if (array1[i] !== array2[i]) {
-			if (spliceCount < 2) {
-				array1 = array1.splice(i, 0, array2[i]);
-				spliceCount++;
-			}
-			else {
-				return false;
-			};
-		};
-	};
-	return true;
-};
+
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // request handler functions
@@ -43,7 +29,7 @@ var languageSelect = function(req, res){
 			res.send('Okay!');
 		};
 	});
-
+	questionIndex = 0;
 };
 
 var getNextQuestion = function(req, res){
@@ -59,18 +45,39 @@ var getNextQuestion = function(req, res){
 var checkResponse = function(req, res){
 	var userResponse = req.body.response.toLowerCase().split('');
 	var answer = model.wordBank[questionIndex-1].toLowerCase().split('');
-	if (Math.abs(userResponse.length - answer.length)>1){
+
+	if (Math.abs(userResponse.length - answer.length)>1) {
 		res.send('incorrect');
 	}
-	else if(compareArrays(userResponse, answer) === false){
-		res.send('also incorrect');
+	else if (userResponse.length - answer.length === 1) {
+		for (var i = 0; i<answer.length; i++){
+			userResponse[i] !== answer[i] ? res.send('incorrect') : res.send('correct but 1 character off')
+		};
+	}
+	else if (userResponse.length - answer.length === -1) {
+		for (var i = 0; i<userResponse.length; i++){
+			userResponse[i] !== answer[i] ? res.send('incorrect') : res.send('correct but 1 character off')
+		};
 	}
 	else {
-		res.send('correct');
+		var spliceCount = 0;
+		for (var i = 0; i<answer.length; i++) {
+			if (userResponse[i] !== answer[i]) {
+				userResponse = userResponse.splice(i, 0, answer[i]);
+				spliceCount++;
+			};
+		};
+		switch (spliceCount) {
+			case 0:
+				res.send('correct');
+				break;
+			case 1:
+				res.send('correct but 1 character off');
+				break;
+			default:
+				res.send('incorrect');
+		};
 	};
-	
-	console.log('userResponse: ', userResponse);
-	console.log('answer: ', answer);
 };
 
 module.exports = {

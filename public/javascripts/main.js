@@ -18,7 +18,7 @@ angular.module('lingoApp').controller('lingoController', ['$scope', '$http', fun
 
 }]);
 
-angular.module('lingoApp').controller('quizController', ['$scope', '$http', function($scope, $http){
+angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$timeout', function($scope, $http, $timeout){
 
 	// utility functions
 	var checkReturnData = function(returnData){
@@ -62,17 +62,24 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', func
 			url: '/quiz/check-response',
 			data: {response : $scope.quizResponse},
 		}).then(function(returnData){
-			if (checkReturnData(returnData)===true){
-				getNextQuestion();
-				$scope.wrongAnwerMessage = false;
-			}
-			else {
-				$scope.wrongAnswerMessage = true;
-			}
-			console.log(returnData);
-		})
+			console.log(returnData.data)
+			switch (returnData.data) {
+				case 'correct':
+					$scope.feedbackMessage = 'correct';
+					getNextQuestion();
+					break;
+				case 'correct but 1 character off':
+					$scope.feedbackMessage = 'correct but 1 character off';
+					getNextQuestion();
+					break;
+				default:
+					$scope.feedbackMessage = 'incorrect';
+			};
+			$timeout(function(){$scope.feedbackMessage = ''}, 2000);
+		});
+		
 		$scope.quizResponse = '';
-	}
+	};
 
 
 
