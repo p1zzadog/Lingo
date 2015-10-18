@@ -20,6 +20,14 @@ angular.module('lingoApp').controller('lingoController', ['$scope', '$http', fun
 
 angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$timeout', function($scope, $http, $timeout){
 
+	// see the translated word bank
+	$scope.enableCheatMode = function(){
+	$scope.cheatMode = true;
+	$http.get('/quiz/cheatMode').then(function(returnData){
+		$scope.wordBankEN = returnData.data
+	});
+	};
+
 	// utility functions
 	var checkReturnData = function(returnData){
 		if (returnData.data === 'incorrect') {

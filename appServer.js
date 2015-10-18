@@ -19,6 +19,7 @@ app.use('/api/translation', routes);
 app.use('/quiz/language-select', routes);
 app.use('/quiz/get-next-question', routes);
 app.use('/quiz/check-response', routes);
+app.use('/quiz/cheatMode', routes)
 
 var port = 3000;
 app.listen(port, function(){

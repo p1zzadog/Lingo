@@ -13,6 +13,8 @@
 	</form>
 
 	<button ng-click="beginQuiz()" ng-show="beginQuizShow">Begin Quiz</button>
+	<button ng-click="enableCheatMode()" ng-show="beginQuizShow">Cheat Mode</button>
+
 
 	<div ng-show="quizShow">
 		<form ng-submit="submitResponse()">
@@ -22,6 +24,10 @@
 		</form>
 	</div>
 	<div><h4 ng-bind="feedbackMessage"></h4></div>
+
+	<ol>
+		<li ng-show="cheatMode" ng-repeat="word in wordBankEN">{{word}}</li>
+	</ol>
 
 <script src="../javascripts/main.js"></script>
 </body>

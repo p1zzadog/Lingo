@@ -22,7 +22,11 @@ var getTranslation = function(req, res){
 };
 
 var languageSelect = function(req, res){
-	googleTranslate.translate(model.wordBank, 'en', req.body.languageSelection, function(err, translations){
+	for (var i=0; i<10; i++) {
+		model.wordBankEN[i] = model.wordPool[Math.floor(Math.random()*21111 +1)];
+	};
+	console.log(model.wordBankEN)
+	googleTranslate.translate(model.wordBankEN, 'en', req.body.languageSelection, function(err, translations){
 		if(err){res.send(err);}
 		else{
 			model.questionBank = translations;
@@ -33,7 +37,7 @@ var languageSelect = function(req, res){
 };
 
 var getNextQuestion = function(req, res){
-	if (questionIndex < model.wordBank.length){
+	if (questionIndex < model.wordBankEN.length){
 	res.send(model.questionBank[questionIndex].translatedText);
 	questionIndex++;
 	}
@@ -148,5 +152,6 @@ module.exports = {
 	getTranslation  : getTranslation,
 	languageSelect  : languageSelect,
 	getNextQuestion : getNextQuestion,
-	checkResponse   : checkResponse
+	checkResponse   : checkResponse,
+	wordBankEN      : model.wordBankEN
 }

@@ -1,10 +1,11 @@
-var wordBank = ['boogers', 'hello', 'thanks', 'stupid', 'cat', 'dog', 'horse', 'frog', 'water', 'noodle' ];
-var questionBank = [];
-
-
+var wordBankTesting = ['boogers', 'hello', 'thanks', 'stupid', 'cat', 'dog', 'horse', 'frog', 'water', 'noodle' ];
+var wordPool = require('./wordbank.json').wordlist
+var wordBankEN = [];
+var questionBankForeign = [];
 
 
 module.exports= {
-	wordBank : wordBank,
-	questionBank : questionBank,
+	wordPool : wordPool,
+	wordBankEN : wordBankEN,
+	questionBankForeign : questionBankForeign,
 }

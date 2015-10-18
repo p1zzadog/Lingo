@@ -19,5 +19,8 @@ router.post('/api/translation', controller.getTranslation);
 router.post('/quiz/language-select', controller.languageSelect);
 router.get('/quiz/get-next-question', controller.getNextQuestion);
 router.post('/quiz/check-response', controller.checkResponse);
+router.get('/quiz/cheatMode', function(req, res){
+	res.send(controller.wordBankEN);
+});
 
 module.exports = router
