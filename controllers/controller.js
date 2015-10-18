@@ -54,7 +54,8 @@ var checkResponse = function(req, res){
 
 	// CASE: WRONG: answer and response differ by more than two characters
 	if (Math.abs(userResponse.length - answer.length)>1) {
-		res.send('incorrect');
+		console.log('res.send0')
+		res.send({status:'incorrect', reason:'Incorrect'});
 	}
 	// CASE: userResponse is one character longer than correct answer
 	else if (userResponse.length - answer.length === 1) {
@@ -62,7 +63,7 @@ var checkResponse = function(req, res){
 		for (var i = 0; i<answer.length; i++){
 			// if an incorrect character is found, DELETE it and tally the change
 			if (userResponse[i] !== answer[i] && spliceCount < 1){
-				userResponse.splice(i, 1);
+				var letterDeleted = userResponse.splice(i, 1);
 				spliceCount++;
 				i--;
 			}
@@ -70,14 +71,14 @@ var checkResponse = function(req, res){
 			// the answer must be wrong by more than one character
 			else if (userResponse[i] !== answer[i] && spliceCount >= 1){
 				console.log('res.send1')
-				res.send('incorrect');
+				res.send({status:'incorrect', reason:'Incorrect'});
 				break;
 			};
 			// PROVISIONAL CORRECT: either an extra character was added at the end of the answer (and no deletion occurred),
 			// or an extra character was typed mid-word and fixed by the single deletion
 			if (i===(answer.length-1) && spliceCount <=1){
 				console.log('res.send2')
-				res.send('correct but 1 character off');
+				res.send({status:'provisional correct', reason:'Correct, but it looks like there was an extra letter there. ' + letterDeleted + ' was removed'});
 				break;
 			};
 		};		
@@ -89,19 +90,24 @@ var checkResponse = function(req, res){
 			// If an incorrect character is found, ADD the correct character and tally the change
 			if (userResponse[i] !== answer[i] && spliceCount<1){
 				userResponse.splice(i, 0, answer[i]);
+				var letterAdded = answer[i];
 				spliceCount++;
 			}
 			// WRONG: if an incorrect character is found and a character was previously added,
 			// the answer must be wrong by more than one character
 			else if (userResponse[i] !== answer[i] && spliceCount >=1) {
 				console.log('res.send3')
-				res.send('incorrect');
+				res.send({status:'incorrect', reason:'Incorrect'});
 				break;
 			};
 			// PROVISIONAL CORRECT: a character must have been omitted and no more than one addition occured
 			if (i===(userResponse.length-1)) {
+				// making sure letterAdded is defined in the case the last letter is the missing letter
+				if (spliceCount === 0) {
+					var letterAdded = answer[answer.length-1];
+				};
 				console.log('res.send4')
-				res.send('correct but 1 character off');
+				res.send({status:'provisional correct', reason:'Correct, but it looks like there was a missing letter. ' + letterAdded + ' was missing'});
 				break;
 			};
 		};
@@ -113,7 +119,8 @@ var checkResponse = function(req, res){
 		for (var i = 0; i<answer.length; i++) {
 			// if an incorrect character is found, REPLACE it with the correct character and tally the change
 			if (userResponse[i] !== answer[i]) {
-				userResponse.splice(i, 1, answer[i]);
+				var letterReplaced = userResponse.splice(i, 1, answer[i]);
+				var letterReplacement = answer[i];
 				spliceCount++;
 			};
 		};
@@ -122,17 +129,17 @@ var checkResponse = function(req, res){
 			// EXACTLY CORRECT: no replacements made
 			case 0:
 				console.log('res.send5')
-				res.send('correct');
+				res.send({status:'correct', reason:'Correct!'});
 				break;
 			// PROVISIONAL CORRECT: one replacement made
 			case 1:
 				console.log('res.send6')
-				res.send('correct but 1 character off');
+				res.send({status:'provisional correct', reason:'Correct, but it looks like a letter was wrong. ' + letterReplaced + ' was replaced with ' + letterReplacement});
 				break;
 			// WRONG: more than one replacement made
 			default:
 				console.log('res.send7')
-				res.send('incorrect');
+				res.send({status:'incorrect', reason:'Incorrect'});
 		};
 	};
 };

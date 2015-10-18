@@ -63,19 +63,25 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 			data: {response : $scope.quizResponse},
 		}).then(function(returnData){
 			console.log(returnData.data)
-			switch (returnData.data) {
+			switch (returnData.data.status) {
 				case 'correct':
-					$scope.feedbackMessage = 'correct';
-					getNextQuestion();
+					$scope.feedbackMessage = returnData.data.reason;
+					$timeout(function(){						
+						getNextQuestion();
+						$scope.feedbackMessage = '';
+					}, 2000);
 					break;
-				case 'correct but 1 character off':
-					$scope.feedbackMessage = 'correct but 1 character off';
-					getNextQuestion();
+				case 'provisional correct':
+					$scope.feedbackMessage = returnData.data.reason;
+					$timeout(function(){
+						getNextQuestion();
+						$scope.feedbackMessage = '';
+					}, 2000);
 					break;
 				default:
-					$scope.feedbackMessage = 'incorrect';
+					$scope.feedbackMessage = returnData.data.reason;
 			};
-			$timeout(function(){$scope.feedbackMessage = ''}, 2000);
+			
 		});
 		
 		$scope.quizResponse = '';

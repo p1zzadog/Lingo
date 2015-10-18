@@ -16,8 +16,7 @@
 
 	<div ng-show="quizShow">
 		<form ng-submit="submitResponse()">
-			<h2>Please enter the English translation of:</h2>
-			<h3 ng-bind="question"></h3>
+			<h2>Please enter the English translation of: <em ng-bind="question"></em></h2>
 			<input ng-model="quizResponse"/>
 			<input type="submit"/>
 		</form>
