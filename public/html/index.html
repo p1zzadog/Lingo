@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="lingoApp">
 <head>
 	<title>Node9:Lingo</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.min.js"></script>
 </head>
-<body>
+<body ng-controller="indexController">
+	<h5><a href="/auth/logout">Logout</a></h5>
 	<h1>Index</h1>
 	<div><a href="/page/translate">Translate</a></div>
 	<div><a href="/page/quiz">Quiz</a></div>
 	<div><a href="/page/progress">Progress</a></div>
+	<script type="text/javascript" src="./javascripts/main.js"></script>
 </body>
 </html>

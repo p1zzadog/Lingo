@@ -11,6 +11,12 @@
   "dependencies": {
     "body-parser": "~1.14.1",
     "express": "~4.13.3",
-    "google-translate": "~1.0.0"
+    "google-translate": "~1.0.0",
+    "mongoose": "~4.1.11",
+    "bcryptjs": "~2.3.0",
+    "passport": "~0.3.0",
+    "passport-local": "~1.0.0",
+    "passport-facebook": "~2.0.0",
+    "express-session": "~1.11.3"
   }
 }

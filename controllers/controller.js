@@ -6,6 +6,9 @@ var questionIndex = 0;
 // utility functions
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+var longerByOne = function(resp, answ) {
+	
+}
 
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

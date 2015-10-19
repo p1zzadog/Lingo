@@ -1,5 +1,21 @@
 angular.module('lingoApp', []);
 
+angular.module('lingoApp').service('authService', ['$http', '$location', function($http){
+	this.authCheck = function(cb){
+		$http.get('/api/me')
+			.then(function(returnData){
+				cb(returnData.data);
+			});
+	};
+}]);
+
+angular.module('lingoApp').controller('indexController', ['$scope', '$http', 'authService', function($scope, $http, authService){
+	authService.authCheck(function(user){
+		console.log('user: ', user);
+		$scope.user = user;
+	});
+}]);
+
 angular.module('lingoApp').controller('lingoController', ['$scope', '$http', function($scope, $http){
 	$scope.greeting = "hello";
 	
