@@ -1,7 +1,7 @@
 // RUN ME ONCE
 
 var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/node9quiz')
+mongoose.connect('mongodb://localhost/LingoDB')
 
 var model = require('./models/model.js')
 

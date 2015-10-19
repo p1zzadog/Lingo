@@ -16,7 +16,12 @@ var userSchema = mongoose.Schema({
 	password: {
 		type: String,
 		required: true
-	}
+	},
+	words: {
+		type: Array,
+	},
+	quizStats: {},
+
 });
 
 // before saving a new user document, we have to encrypt the password

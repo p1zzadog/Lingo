@@ -63,6 +63,13 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 		});
 	}
 
+	// var finishQuiz = function(){
+	// 	$http({
+	// 		method: 'get',
+	// 		url: '/quiz/finish-quiz'
+	// 	})
+	// }
+
 	// View related functions
 	
 	$scope.languageSelectForm = true
@@ -70,6 +77,7 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 		$http.post('/quiz/language-select', { languageSelection : $scope.languageSelection } )
 			.then(function(returnData){
 				returnData.data ? $scope.beginQuizShow = true : console.log('something went wrong!');
+				console.log(returnData.data)
 			});
 		};
 

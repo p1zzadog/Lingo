@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/routes.js');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/node9quiz');
+mongoose.connect('mongodb://localhost/LingoDB');
 
 var session = require('express-session');
 var passport = require('passport');
