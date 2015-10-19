@@ -38,9 +38,11 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 
 	// see the translated word bank
 	$scope.enableCheatMode = function(){
+		console.log("YOU CHEATER")
 	$scope.cheatMode = true;
 	$http.get('/quiz/cheatMode').then(function(returnData){
-		$scope.wordBankEN = returnData.data
+		console.log(returnData.data)
+		$scope.quizBankEN = returnData.data
 	});
 	};
 

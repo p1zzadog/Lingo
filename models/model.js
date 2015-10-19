@@ -1,18 +1,9 @@
 // var wordBankTesting = ['boogers', 'hello', 'thanks', 'stupid', 'cat', 'dog', 'horse', 'frog', 'water', 'noodle' ];
-var wordPool = require('./wordbank.json').wordlist
+var wordPool = require('./wordpool.json').wordlist
 var mongoose = require('mongoose');
-var random = require('mongoose-simple-random');
 
-var wordSchema = mongoose.Schema({
-	word : {type: String, required: true}
-});
-wordSchema.plugin(random);
-var Words = mongoose.model('Words', wordSchema);
-
-
-
-var wordBankEN = [];
-var questionBankForeign = [];
+var quizBankEN = [];
+var quizBankTR = [];
 
 
 
@@ -40,8 +31,8 @@ var quizSchema = mongoose.Schema({
 var Quiz = mongoose.model('Quiz', quizSchema);
 
 module.exports= {
-	wordPool : wordPool,
-	wordBankEN : wordBankEN,
-	questionBankForeign : questionBankForeign,
-	Quiz : Quiz,
+	wordPool   : wordPool,
+	quizBankEN : quizBankEN,
+	quizBankTR : quizBankTR,
+	Quiz       : Quiz,
 }
