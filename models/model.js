@@ -30,6 +30,8 @@ var quizSchema = mongoose.Schema({
 
 var Quiz = mongoose.model('Quiz', quizSchema);
 
+
+
 module.exports= {
 	wordPool   : wordPool,
 	quizBankEN : quizBankEN,

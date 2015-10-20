@@ -1,4 +1,13 @@
-var removeExtra = function(userResponse, answer, req, res){
+var model = require('../models/model.js')
+
+var tooManyChars = function(userResponse, anser, req, res, freshQuestion, correctness, quizId, questionIndex){
+	console.log('res.send0')
+	correctness = false;
+	updateQuizDoc(freshQuestion, correctness, quizId, questionIndex)
+	res.send({status:'incorrect', reason:'Incorrect'});
+}
+
+var removeExtra = function(userResponse, answer, req, res, freshQuestion, correctness, quizId, questionIndex){
 	var spliceCount = 0;
 	// loop over the length of shorter word (answer)
 	for (var i = 0; i<answer.length; i++){
@@ -12,7 +21,8 @@ var removeExtra = function(userResponse, answer, req, res){
 		// the answer must be wrong by more than one character
 		else if (userResponse[i] !== answer[i] && spliceCount >= 1){
 			console.log('res.send1')
-			incorrect = true;
+			correctness = false;
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'incorrect', reason:'Incorrect'});
 			break;
 		};
@@ -23,13 +33,14 @@ var removeExtra = function(userResponse, answer, req, res){
 			if (spliceCount === 0) {
 				var letterDeleted = userResponse[userResponse.length-1];
 			}
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'provisional correct', reason:'Correct, but it looks like there was an extra letter there. ' + letterDeleted + ' was removed'});
 			break;
 		};
 	};		
 };
 
-var addMissing = function(userResponse, answer, req, res){
+var addMissing = function(userResponse, answer, req, res, freshQuestion, correctness, quizId, questionIndex){
 	var spliceCount = 0;
 	// loop over the length of shorter word (userResponse)
 	for (var i = 0; i<userResponse.length; i++){
@@ -43,7 +54,8 @@ var addMissing = function(userResponse, answer, req, res){
 		// the answer must be wrong by more than one character
 		else if (userResponse[i] !== answer[i] && spliceCount >=1) {
 			console.log('res.send3')
-			incorrect = true;
+			correctness = false;
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'incorrect', reason:'Incorrect'});
 			break;
 		};
@@ -54,13 +66,14 @@ var addMissing = function(userResponse, answer, req, res){
 				var letterAdded = answer[answer.length-1];
 			};
 			console.log('res.send4')
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'provisional correct', reason:'Correct, but it looks like there was a missing letter. ' + letterAdded + ' was missing'});
 			break;
 		};
 	};
 };
 
-var equalLength = function(userResponse, answer, req, res){
+var equalLength = function(userResponse, answer, req, res, freshQuestion, correctness, quizId, questionIndex){
 	var spliceCount = 0;
 	// loop over the length of one of the arrays (which one is arbitrary)
 	for (var i = 0; i<answer.length; i++) {
@@ -76,24 +89,52 @@ var equalLength = function(userResponse, answer, req, res){
 		// EXACTLY CORRECT: no replacements made
 		case 0:
 			console.log('res.send5')
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'correct', reason:'Correct!'});
 			break;
 		// PROVISIONAL CORRECT: one replacement made
 		case 1:
 			console.log('res.send6')
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'provisional correct', reason:'Correct, but it looks like a letter was wrong. ' + letterReplaced + ' was replaced with ' + letterReplacement});
 			break;
 		// WRONG: more than one replacement made
 		default:
 			console.log('res.send7')
-			incorrect = true;
+			correctness = false
+			updateQuizDoc(freshQuestion, correctness, quizId, questionIndex);
 			return res.send({status:'incorrect', reason:'Incorrect'});
 	};
 };
 
+updateQuizDoc = function(freshness, isCorrect, quizId, questionIndex){
+	
+	if(isCorrect === false && freshness === true) {
+		model.Quiz.update( 
+			{_id:quizId}, 
+			{ $push: { wordsIncorrect: model.quizBankEN[questionIndex-1] } } ,
+			function(err, result) {
+				if (err) console.log('error', err);
+				if (result) console.log('result', result);
+			}
+		);
+	}
+	if(isCorrect === true && freshness === true) { 
+		model.Quiz.update(
+			{_id:quizId}, 
+			{ $push: { wordsCorrect: model.quizBankEN[questionIndex-1] } } ,
+			function(err, result) {
+				if (err) console.log('error', err);
+				if (result) console.log('result', result);
+			}
+		);
+	};
+};
+
 module.exports = {
+	tooManyChars : tooManyChars,
 	removeExtra : removeExtra,
 	addMissing : addMissing,
 	equalLength : equalLength,
-	incorrect : incorrect
+	updateQuizDoc : updateQuizDoc
 };
