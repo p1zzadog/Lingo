@@ -20,7 +20,7 @@
 		<form ng-submit="submitResponse()">
 			<h2>Please enter the English translation of: <em ng-bind="question"></em></h2>
 			<input ng-model="quizResponse"/>
-			<input type="submit"/>
+			<input ng-disabled="disableSubmit" type="submit"/>
 		</form>
 	</div>
 	<div><h4 ng-bind="feedbackMessage"></h4></div>

@@ -41,26 +41,18 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 		console.log("YOU CHEATER")
 	$scope.cheatMode = true;
 	$http.get('/quiz/cheatMode').then(function(returnData){
-		console.log(returnData.data)
 		$scope.quizBankEN = returnData.data
 	});
 	};
 
 	// utility functions
-	var checkReturnData = function(returnData){
-		if (returnData.data === 'incorrect') {
-			return false;
-		}
-		else{
-			return true;
-		};
-	};
 
 	var getNextQuestion = function(){
 		$http({
 			method: 'get',
 			url: '/quiz/get-next-question'
 		}).then(function(nextQuestion){
+			if(nextQuestion.data==='All Done!') $scope.quizShow = false
 			$scope.question = nextQuestion.data;
 		});
 	}
@@ -79,7 +71,6 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 		$http.post('/quiz/language-select', { languageSelection : $scope.languageSelection } )
 			.then(function(returnData){
 				returnData.data ? $scope.beginQuizShow = true : console.log('something went wrong!');
-				console.log(returnData.data)
 			});
 		};
 
@@ -100,15 +91,19 @@ angular.module('lingoApp').controller('quizController', ['$scope', '$http', '$ti
 			switch (returnData.data.status) {
 				case 'correct':
 					$scope.feedbackMessage = returnData.data.reason;
-					$timeout(function(){						
+					$scope.disableSubmit = true;
+					$timeout(function(){
 						getNextQuestion();
+						$scope.disableSubmit = false;						
 						$scope.feedbackMessage = '';
 					}, 2000);
 					break;
 				case 'provisional correct':
 					$scope.feedbackMessage = returnData.data.reason;
+					$scope.disableSubmit = true;
 					$timeout(function(){
 						getNextQuestion();
+						$scope.disableSubmit = false;						
 						$scope.feedbackMessage = '';
 					}, 2000);
 					break;
