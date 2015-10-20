@@ -1,4 +1,4 @@
-var removeExtra = function(userResponse, answer, req, res, incorrect){
+var removeExtra = function(userResponse, answer, req, res){
 	var spliceCount = 0;
 	// loop over the length of shorter word (answer)
 	for (var i = 0; i<answer.length; i++){
@@ -29,7 +29,7 @@ var removeExtra = function(userResponse, answer, req, res, incorrect){
 	};		
 };
 
-var addMissing = function(userResponse, answer, req, res, incorrect){
+var addMissing = function(userResponse, answer, req, res){
 	var spliceCount = 0;
 	// loop over the length of shorter word (userResponse)
 	for (var i = 0; i<userResponse.length; i++){
@@ -60,7 +60,7 @@ var addMissing = function(userResponse, answer, req, res, incorrect){
 	};
 };
 
-var equalLength = function(userResponse, answer, req, res, incorrect){
+var equalLength = function(userResponse, answer, req, res){
 	var spliceCount = 0;
 	// loop over the length of one of the arrays (which one is arbitrary)
 	for (var i = 0; i<answer.length; i++) {
@@ -94,5 +94,6 @@ var equalLength = function(userResponse, answer, req, res, incorrect){
 module.exports = {
 	removeExtra : removeExtra,
 	addMissing : addMissing,
-	equalLength : equalLength
+	equalLength : equalLength,
+	incorrect : incorrect
 };

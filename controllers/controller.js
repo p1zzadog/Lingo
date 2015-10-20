@@ -20,6 +20,8 @@ var createQuiz = function(english, translation, userId){
 		wordsEN : english,
 		wordsTR : translation,
 		user    : userId,
+		wordsCorrect: [],
+		wordsIncorrect: [],
 	});
 	newQuiz.save(function(err, result){
 		if (err) console.log(err);
@@ -32,6 +34,7 @@ var createQuiz = function(english, translation, userId){
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 var questionIndex = null;
 var quizId = null;
+
 
 var languageSelect = function(req, res){
 	model.quizBankEN = generateQuizBank(model.wordPool);
@@ -56,9 +59,10 @@ var getNextQuestion = function(req, res){
 };
 
 var checkResponse = function(req, res){
+	var incorrect = false;
 	var userResponse = req.body.response.toLowerCase().split('');
 	var answer = model.quizBankEN[questionIndex-1].toLowerCase().split('');
-	var incorrect = false;
+	
 
 	// algorithm will try to determine if answer is wrong by one character and count it provisionally correct
 	// 1) one character swapped
@@ -73,15 +77,18 @@ var checkResponse = function(req, res){
 	}
 	// CASE: userResponse is one character longer than correct answer
 	else if (userResponse.length - answer.length === 1) {
-		scratchpad.removeExtra(userResponse, answer, req, res, incorrect);
+		scratchpad.removeExtra(userResponse, answer, req, res);
+		if (scratchpad.incorrect === true) incorrect = true;
 	}
 	// CASE: userResponse is one character shorter than correct answer
 	else if (userResponse.length - answer.length === -1) {
-		scratchpad.addMissing(userResponse, answer, req, res, incorrect);		
+		scratchpad.addMissing(userResponse, answer, req, res);
+		if (scratchpad.incorrect === true) incorrect = true;		
 	}
 	// CASE: userResponse and Answer lengths are equal
 	else {
-		scratchpad.equalLength(userResponse, answer, req, res, incorrect);
+		scratchpad.equalLength(userResponse, answer, req, res);
+		if (scratchpad.incorrect === true) incorrect = true;
 	};
 
 
@@ -90,18 +97,21 @@ var checkResponse = function(req, res){
 	if(incorrect === true) {
 		model.Quiz.update( 
 			{_id:quizId}, 
-			{ $push: { wordsIncorrect: model.quizBankEN[questionIndex-1] } } 
+			{ $push: { wordsIncorrect: model.quizBankEN[questionIndex-1] } } ,
+			function(err, result) {
+				if (err) console.log('error', err);
+				if (result) console.log('result', result);
+			}
 		);
 	}
 	else { 
-		console.log('update the quiz document: ', quizId)
-		console.log('word to push: ', model.quizBankEN[questionIndex-1])
-		model.Quiz.find({}, function(err, doc){
-			console.log('doc is: ', doc)
-		})
 		model.Quiz.update(
 			{_id:quizId}, 
-			{ $push: { wordsCorrect: model.quizBankEN[questionIndex-1] } } 
+			{ $push: { wordsCorrect: model.quizBankEN[questionIndex-1] } } ,
+			function(err, result) {
+				if (err) console.log('error', err);
+				if (result) console.log('result', result);
+			}
 		);
 	};
 };
